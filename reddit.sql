@@ -23,3 +23,28 @@ CREATE TABLE `posts` (
   KEY `userId` (`userId`), -- why did we add this here? ask me :)
   CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE SET NULL
 );
+
+CREATE TABLE `subreddits` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(30) NOT NULL,
+  `description` VARCHAR(200) NOT NULL,
+  `createdAt` DATETIME NOT NULL,
+  `updatedAt` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_name` (`name`)
+);
+
+ALTER TABLE `posts`
+ADD COLUMN `subredditId` INT(11),
+ADD FOREIGN KEY (subredditId) REFERENCES subreddits(id);
+
+CREATE TABLE `votes` (
+  `postId` INT(11) NOT NULL,
+  `userId` INT(11) NOT NULL,
+  `vote` TINYINT(1) DEFAULT NULL,
+  `createdAt` DATETIME NOT NULL,
+  `updatedAt` DATETIME NOT NULL,
+  PRIMARY KEY (`postId`, `userId`),
+  CONSTRAINT `post_ibfk_2` FOREIGN KEY (`postId`) REFERENCES `posts` (`id`),
+  CONSTRAINT `user_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`)
+);
